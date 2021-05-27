@@ -6,16 +6,15 @@ function main() {
     const renderer = new THREE.WebGLRenderer({canvas});
   
     // Make camera
-    const fov = 75;
+    const fov = 65;
     const aspect = 2;  // the canvas default
     const near = 0.1;
-    const far = 50;
+    const far = 100;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 50, 0);
-    camera.up.set(0, 0, 1);
-    camera.lookAt(0, 0, 0);  
+    camera.position.set(0, 50, 50);
 
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x161717);
 
     // Add Directional Light to Scene
     {
@@ -28,32 +27,33 @@ function main() {
   
     // Draw stars
     {
-      const boxWidth = 5;
-      const boxHeight = 5;
-      const boxDepth = 5;
+      const boxWidth = 1;
+      const boxHeight = 1;
+      const boxDepth = 1;
       const cubeGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
-      function MakeCubeInstance(geometry, color, xPosition)
+      function MakeCubeInstance(geometry, color)
       {
-        const material = new THREE.MeshBasicMaterial({color});
+        const material = new THREE.MeshStandardMaterial({emissive: color});
     
         const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
     
-        cube.position.x = xPosition;
+        // Set cube position
+        var pos = 200;
+        cube.position.x = GetRandomInt(-pos, pos);
+        cube.position.y = GetRandomInt(-pos, pos);
+        cube.position.z = -50;
     
         return cube;
       }
   
-      const cubes = [
-        MakeCubeInstance(cubeGeometry, 0x44aa88,  0),
-        MakeCubeInstance(cubeGeometry, 0x8844aa, -2),
-        MakeCubeInstance(cubeGeometry, 0xaa8844,  2),
-      ];
-      /*for(var i = 1; i < 50; i++)
+      const stars = [];
+      //const canvas = renderer.domElement;
+      for(var i = 0; i < 500; i++)
       {
-        cubes.push(MakeCubeInstance(cubeGeometry, new THREE.Color('skyblue'), i));
-      }*/
+        stars.push(MakeCubeInstance(cubeGeometry, new THREE.Color('white')));
+      }
     }
 
     // Make Solar System here
@@ -122,16 +122,17 @@ function main() {
           camera.aspect = canvas.clientWidth / canvas.clientHeight;
           camera.updateProjectionMatrix();
         }
-
-        // Animate objects
-        objects.forEach((obj) => {
-            obj.rotation.y = time;
-          });
     
         renderer.render(scene, camera);
     
         requestAnimationFrame(render);
       }
+
+      function GetRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
       // Request Animation
       requestAnimationFrame(render);
