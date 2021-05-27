@@ -57,10 +57,11 @@ function main() {
     }
 
     // Make Solar System here
-    /*const objects = [];
+    const objects = [];
     
     // Empty object
     const solarSystem = new THREE.Object3D();
+    solarSystem.position.y = 50;
     scene.add(solarSystem);
     objects.push(solarSystem);
 
@@ -97,7 +98,7 @@ function main() {
     const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
     moonMesh.scale.set(.5, .5, .5);
     moonOrbit.add(moonMesh);
-    objects.push(moonMesh);*/
+    objects.push(moonMesh);
 
     // Make renderer responsive
     function resizeRendererToDisplaySize(renderer) {
@@ -123,6 +124,11 @@ function main() {
           camera.updateProjectionMatrix();
         }
     
+        // Animate planets
+        objects.forEach((obj) => {
+        obj.rotation.y = time;
+        });
+
         renderer.render(scene, camera);
     
         requestAnimationFrame(render);
