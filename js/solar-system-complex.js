@@ -6,12 +6,12 @@ function main() {
     const renderer = new THREE.WebGLRenderer({canvas});
   
     // Make camera
-    const fov = 40;
+    const fov = 75;
     const aspect = 2;  // the canvas default
     const near = 0.1;
-    const far = 1000;
+    const far = 50;
     const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 100, 0);
+    camera.position.set(0, 50, 0);
     camera.up.set(0, 0, 1);
     camera.lookAt(0, 0, 0);  
 
@@ -26,8 +26,38 @@ function main() {
       scene.add(light);
     }
   
+    // Draw stars
+    {
+      const boxWidth = 5;
+      const boxHeight = 5;
+      const boxDepth = 5;
+      const cubeGeometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
+      function MakeCubeInstance(geometry, color, xPosition)
+      {
+        const material = new THREE.MeshBasicMaterial({color});
+    
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+    
+        cube.position.x = xPosition;
+    
+        return cube;
+      }
+  
+      const cubes = [
+        MakeCubeInstance(cubeGeometry, 0x44aa88,  0),
+        MakeCubeInstance(cubeGeometry, 0x8844aa, -2),
+        MakeCubeInstance(cubeGeometry, 0xaa8844,  2),
+      ];
+      /*for(var i = 1; i < 50; i++)
+      {
+        cubes.push(MakeCubeInstance(cubeGeometry, new THREE.Color('skyblue'), i));
+      }*/
+    }
+
     // Make Solar System here
-    const objects = [];
+    /*const objects = [];
     
     // Empty object
     const solarSystem = new THREE.Object3D();
@@ -67,7 +97,7 @@ function main() {
     const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
     moonMesh.scale.set(.5, .5, .5);
     moonOrbit.add(moonMesh);
-    objects.push(moonMesh);
+    objects.push(moonMesh);*/
 
     // Make renderer responsive
     function resizeRendererToDisplaySize(renderer) {
